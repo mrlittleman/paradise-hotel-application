@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ListingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('auth/login');
+    return view('auth.login');
 });
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -15,17 +17,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-});
 
-Route::middleware(['auth', 'role:recruiter'])->group(function () {
-    Route::resource('jobs', JobController::class);
+    Route::get('/listings', [ListingController::class, 'listings'])->name('listings.index');
 });
-
-Route::middleware(['auth', 'role:candidate'])->group(function () {
-    Route::get('jobs', [JobController::class, 'index']);
-    Route::post('jobs/{job}/apply', [ApplicationController::class, 'store']);
-});
-
 
 require __DIR__.'/auth.php';
